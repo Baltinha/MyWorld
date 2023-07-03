@@ -12,9 +12,8 @@ public class MoveChar : MonoBehaviour
     private float turnSmoothVelocity;
     private Vector2 moveD = Vector2.zero;
     //Pulo
-    private Vector2 jumpD = Vector2.zero;
-    public float jumpVelocity = 15;
-    public float gravity = -20f;
+    public float jumpVelocity = 5.0f;
+    public float gravity = -1f;
     private bool isJumping = false;
 
     //camera
@@ -52,6 +51,13 @@ public class MoveChar : MonoBehaviour
     }
     public void playerJump() 
     {
-      //jumpD.y = jumpVelocity;
+        Vector3 jumpD = new Vector3(0f, 0f, 0f);
+        if (isJumping)
+        {
+            jumpD.y = jumpVelocity;
+            controller.Move(jumpD * Time.deltaTime);
+        }
+        //jumpD.y += gravity;
+        controller.Move(jumpD * Time.deltaTime);
     }
 }
