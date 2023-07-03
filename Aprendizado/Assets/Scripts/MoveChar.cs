@@ -13,7 +13,7 @@ public class MoveChar : MonoBehaviour
     private Vector2 moveD = Vector2.zero;
     //Pulo
     public float jumpVelocity = 5.0f;
-    public float gravity = -1f;
+    public float gravity = -0.9f;
     private bool isJumping = false;
 
     //camera
@@ -55,9 +55,10 @@ public class MoveChar : MonoBehaviour
         if (isJumping)
         {
             jumpD.y = jumpVelocity;
-            controller.Move(jumpD * Time.deltaTime);
+
         }
-        //jumpD.y += gravity;
+        else if (!isJumping) 
+        jumpD.y += gravity;
         controller.Move(jumpD * Time.deltaTime);
     }
 }
