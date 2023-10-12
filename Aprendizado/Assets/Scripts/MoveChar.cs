@@ -16,14 +16,14 @@ public class MoveChar : MonoBehaviour
     [Header("Pulo")]
     public float jumpVelocity = 5.0f;
     public float gravity = -0.9f;
-    private bool isJumping = false;
-    //private bool isGrounded = false;
+    private bool isJumping;
+    public Transform isGrounded;
+    public LayerMask ground;
     //interagir
     [Header("Interact")]
     public Transform pInicial;
     public float distanciaFinal = 1f;
     private bool isInteract = false;
-
 
     //camera
     [Header("Camera")]
@@ -37,7 +37,6 @@ public class MoveChar : MonoBehaviour
     public void OnJump(InputAction.CallbackContext context)
     {
         isJumping = context.ReadValueAsButton();
-        Debug.Log(isJumping);
     }
 
     public void OnInteract(InputAction.CallbackContext context)
@@ -68,14 +67,24 @@ public class MoveChar : MonoBehaviour
     public void playerJump() 
     {
         Vector3 jumpD = new Vector3(0f, 0f, 0f);
-        if (isJumping)
-        {
-            jumpD.y = jumpVelocity;
+        jumpD.y = jumpVelocity;
 
+
+        if (isJumping && IsGrounded())
+        {
+            controller.Move(jumpD * Time.deltaTime);
         }
-        else if (!isJumping) 
-        jumpD.y += gravity;
-        controller.Move(jumpD * Time.deltaTime);
+        else if(!IsGrounded())
+        {
+            controller.Move(jumpD * Time.deltaTime);
+        }
+
+    }
+
+    bool IsGrounded() 
+    {
+
+        return Physics.CheckSphere(isGrounded.position,0.1f,ground);
     }
 
     void Interact() 
@@ -87,9 +96,10 @@ public class MoveChar : MonoBehaviour
             {
                 IInteractable obj = HitInfo.transform.GetComponent<IInteractable>();
 
+                if (obj == null) return;
+
                 obj.Interact();
 
-                if (obj != null) return;
                 Debug.Log("interage");
             }
         }
